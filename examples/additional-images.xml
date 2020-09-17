@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<rss>
+    <channel>
+        <!-- Klevu XSD Schema allows you to specify two images per item,
+             via <image_link/> and <additional_image_link/>. This example
+             shows how you can include some more which you can then present
+             to your customers according to your own frontend logic. -->
+        <item>
+            <image_link>https://your.website/image1.jpg</image_link>
+            <additional_image_link>https://your.website/image2.png</additional_image_link>
+
+            <!-- You can specify additional images as a custom <attribute/>.
+                 Specify <is_facet/> and <is_searchable/> as false so the values are
+                 not considered as searchable data, but specify <is_return/> as true to
+                 indicate you would like these values returned with the search results. -->
+            <attributes>
+                <attribute>
+                    <id>extra_images</id>
+                    <is_facet>false</is_facet>
+                    <is_searchable>false</is_searchable>
+                    <is_return>true</is_return>
+                    <values>
+                        <value>https://your.website/image3.jpg</value>
+                        <value>https://your.website/image4.jpg</value>
+                    </values>
+                </attribute>
+            </attributes>
+
+            <!-- You can also specify images within <additional_data_to_return/>.
+                 Klevu will return any value you specify here with the search results. -->
+            <additional_data_to_return>{"more_images":["https://your.website/image5.jpg","https://your.website/image6.jpg"]}</additional_data_to_return>
+        </item>
+    </channel>
+</rss>

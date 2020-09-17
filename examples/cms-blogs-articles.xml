@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<rss>
+    <channel>
+        <!-- An example of a CMS Page or Article to present to your visitors,
+             directing them to some website content rather than a product. -->
+        <item>
+            <id>cms_12345</id>
+            <item_type>KLEVU_CMS</item_type>
+            <title>My Blog Article or CMS Page</title>
+            <link>https://your.website/blog-or-cms-page.html</link>
+            <published_at>1999-12-31</published_at>
+            <image_link>https://your.website/page.jpg</image_link>
+            <description>The content of the Blog Article or CMS page.</description>
+            <attributes>
+                <attribute>
+                    <id>type</id>
+                    <values>
+                        <value>Advice</value>
+                        <value>Technology</value>
+                    </values>
+                </attribute>
+            </attributes>
+        </item>
+    </channel>
+</rss>

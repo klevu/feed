@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<rss>
+    <channel>
+        <!-- An example of a Category to present to your visitors if
+             they are searching for something like 'watches' or 'accessories',
+             directing them to a category of your store rather than a product. -->
+        <item>
+            <id>c12345</id>
+            <item_type>KLEVU_CATEGORY</item_type>
+            <title><![CDATA[Watches & Accessories]]></title>
+            <link>https://your.website/category.html</link>
+            <image_link>https://your.website/category.jpg</image_link>
+        </item>
+    </channel>
+</rss>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<rss>
+    <channel>
+        <!-- An example of a Custom Entity: a Recipe -->
+        <item>
+            <id>recipe_12345</id>
+            <item_type>ACME_RECIPE</item_type>
+            <title>The Utlimate Fish and Chips!</title>
+            <link>https://your.website/recipes/fish-and-chips.html</link>
+            <price>0.99 GBP</price>
+            <image_link>https://your.website/fish-and-chips.jpg</image_link>
+            <description>
+                Our take on the british classic, fish and chips!
+                Method: Crack two eggs in to a bowl...
+            </description>
+        </item>
+
+        <!-- An example of a Custom Entity: a Shop -->
+        <item>
+            <id>shop_London</id>
+            <item_type>ACME_SHOP</item_type>
+            <title>London Knightsbridge</title>
+            <link>https://your.website/shops/london-knightsbridge.html</link>
+            <image_link>https://your.website/london.jpg</image_link>
+            <attributes>
+                <attribute>
+                    <id>services</id>
+                    <name>Services</name>
+                    <values>
+                        <value>Beauty</value>
+                        <value>Electronics</value>
+                    </values>
+                </attribute>
+            </attributes>
+        </item>
+    </channel>
+</rss>

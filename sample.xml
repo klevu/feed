@@ -1,0 +1,529 @@
+<?xml version="1.0"?>
+<!--
+Sample XML feed for indexing your store data with Klevu.
+Please use a validator that supports the XML Schema 1.1 standard.
+Technical documentation can be found within the referenced XSD Schema.
+
+The Klevu schema is loosely based on Google's Product data specification,
+with some modifications according to our own internal requirements:
+https://support.google.com/merchants/answer/7052112
+
+Google feeds include a g: namespace for many elements. To make your
+life easier we allow you to either include or omit this g: prefix.
+For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
+-->
+<rss
+    version="2.0"
+    xsi:noNamespaceSchemaLocation="./schema.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+    <!-- REQUIRED.
+         This Rss > Channel > Title, Link and Item structure matches
+         the structure of the Google Product data specification. -->
+    <channel>
+        
+        <!-- REQUIRED.
+             This is the title of your store, for reference purposes only. 
+             If this is a DEV or Staging store feed, the title should
+             ideally reflect this, for example Acme Inc (Staging). -->
+        <title>Acme Inc (Production)</title>
+
+        <!-- REQUIRED.
+             This is the URL of your store, for reference purposes only. 
+             If this is a DEV or Staging store feed, the link should
+             ideally reflect this, for example http://staging.acme.com -->
+        <link>https://www.acme.com</link>
+        
+        <!-- OPTIONAL.
+             <meta/> is entirely optional and used for your own reference data.
+             There is also no defined structure of the elements within.
+             This <meta/> data is not processed by Klevu, we will simply ignore it.
+             
+             For example you might wish to include some information about the date
+             and server used to generate the feed, or the currency conversion rate.
+             You can omit the <meta/> element entirely if you have no use for it. -->
+        <meta>
+            <feed_date>20th January 2020, 20:30:01</feed_date>
+            <server>id_123</server>
+            <currencies>
+                <USD>1.23</USD>
+                <JPY>123.45</JPY>
+            </currencies>
+        </meta>
+        
+        <!-- REQUIRED.
+             Include one item for each record you wish to be indexed by Klevu.
+             If your store includes compound products (ie. a Parent with multiple Variants),
+             please only include the Variants. Do not add an <item/> for the Parent products. -->
+        <item>
+            
+            <!-- OPTIONAL.
+                 Once again <meta/> is optional, this time relating to one particular
+                 item whereas the previous <meta/> above was relating to the entire feed.
+                 This <meta/> data is not processed by Klevu, we will simply ignore it.
+                 
+                 For example you might wish to include some information about the date the
+                 product was created and updated in the source system, or perhaps some tax data.
+                 You can omit the <meta/> element entirely if you have no use for it. -->
+            <meta>
+                <created_at>2019-11-20 09:52:17</created_at>
+                <updated_at>2020-01-20 10:02:52</updated_at>
+                <tax>
+                    <rate>20.00</rate>
+                    <class>UK VAT</class>
+                </tax>
+                <prices>
+                    <including_tax>123.45</including_tax>
+                    <excluding_tax>102.88</excluding_tax>
+                </prices>
+            </meta>
+
+            <!-- REQUIRED.
+                 Each item in your feed must have a unique ID.
+                 If you have products, categories and cms entities which
+                 can have similar IDs in your source system, they must
+                 be differentiated somehow within your feed.
+                 
+                 You may wish to include a prefix to distinguish items from
+                 other item types in your feed, for example 'p' for Products,
+                 'v' for Product Variants, 'c' for Categories, etc.
+            
+                 The below example represents a compound product.
+                 It has a Variant ID of v12345 and a Parent ID of p54321.
+                 Klevu will combine this to a final ID of p54321-v12345.
+                 
+                 For non-compound items you should omit <item_group_id/>
+                 and populate <id/> with the ID of the item, eg. p54321. -->
+            <id>v12345</id>
+            <item_group_id>p54321</item_group_id>
+            
+            <!-- OPTIONAL, KLEVU_PRODUCT assumed if omitted.
+                 This particular item is a Product.
+                 You can specify any item type you like, but the common Klevu
+                 values are KLEVU_PRODUCT, KLEVU_CATEGORY AND KLEVU_CMS.
+                 
+                 For custom item types, we recommend a format like ACME_ENTITY,
+                 where Acme is your company name, for example ACME_SHOP or ACME_RECIPE. -->
+            <item_type>KLEVU_PRODUCT</item_type>
+            
+            <!-- REQUIRED for KLEVU_PRODUCT, OPTIONAL otherwise.
+                 The Stock Keeping Unit code for an item. For compound
+                 items, this will usually be the SKU of the Variant. -->
+            <sku>ABC-123</sku>
+            
+            <!-- REQUIRED.
+                 The name or title of the item.
+                 For a compound item it is up to you whether to use
+                 the title of the Parent or the title of the Variant.
+                 
+                 For example if you want to see the Variant data in search
+                 results like "Joust Duffle Bag - Large" then use the Variant
+                 title. If you prefer "Joust Duffle Bag" no matter which Variant
+                 is being displayed, then use the Parent title. -->
+            <title>Joust Duffle Bag</title>
+
+            <!-- REQUIRED.
+                 This is the URL to access your item.
+                 It must start with either http:// or https:// 
+                 
+                 For compound items, you may wish to include some modifier to
+                 allow you to pre-select a Variant directly from the search results.
+                 For example: https://your.website/item-detail-page.html?v=12345 -->
+            <link>https://your.website/item-detail-page.html</link>
+
+            <!-- REQUIRED for KLEVU_PRODUCT, OPTIONAL otherwise.
+                 This is the stock status of your item.
+                 Allowed values are 'in stock' or 'out of stock' (case insensitive).
+                 For compound items this should be the Variant stock status. -->
+            <availability>In Stock</availability>
+            
+            <!-- OPTIONAL.
+                 This is the date that the item was published on your website.
+                 
+                 You might use the created date or another date which represents
+                 when the item was made publicly available. This is used by Klevu
+                 for 'newness' ranking and also for the "Sort by Newest" sort order.
+                 
+                 For compound items it is up to you whether to use the Parent or
+                 Variant data for the published date. If you wish to highlight new
+                 Variant options being launched, use the Variant date. -->
+            <published_at>1999-12-31T23:59:59​+0100</published_at>
+
+            <!-- REQUIRED for KLEVU_PRODUCT, OPTIONAL otherwise.
+                 These fields represent base currency prices of your item.
+                 You must use the same base currency for all items in your feed.
+                 
+                 The format is similar to Google's Product price specification:
+                 https://support.google.com/merchants/answer/6324371
+                 
+                 The price of your item is represented by two values: price and sale price.
+                 <price/> is required for items of type KLEVU_PRODUCT, <sale_price/> is optional.
+                 
+                 If both values are provided, <price/> represents the 'was price' and
+                 <sale_price/> represents the 'now price', eg. Was: 123.45, Now: 100.00. 
+                 
+                 For compound items please use the Variant's prices.
+                 Klevu will automatically calculate lowest and highest prices
+                 across all of the sibling Variants with the same <item_group_id/>. -->
+            <price>123.45 GBP</price>
+            <sale_price>100 GBP</sale_price>
+            
+            <!-- OPTIONAL.
+                 If you wish to display additional currencies on your website,
+                 populate the following with all additional values for <price/>
+                 and <sale_price/>.
+                 
+                 For best results we recommend specifying the same set of
+                 currencies for every item in your feed, and to always specify
+                 values in complete pairs of <price/> and <sale_price/>.
+                 
+                 These additional currencies can be requested in search results
+                 by using an API parameter. Any sorting or filtering will also
+                 respect the currency-specific versions defined here. -->
+            <additional_currencies>
+                <additional_currency>
+                    <price>151.84 USD</price>
+                    <sale_price>123.00 USD</sale_price>
+                </additional_currency>
+                
+                <additional_currency>
+                    <price>15240 JPY</price>
+                    <sale_price>12345 JPY</sale_price>
+                </additional_currency>
+            </additional_currencies>
+            
+            <!-- OPTIONAL but RECOMMENDED.
+                 These elements represent the images of your item.
+                 They must start with either http:// or https://
+                 
+                 For compound items you can choose whether to use
+                 the Parent image or the Variant image, in combination
+                 with the value for <additional_image_link/>.
+                 
+                 For example if you want to first show the general
+                 image and when the customer hovers show the specific
+                 Variant image, populate <image_link/> with the Parent
+                 image and <additional_image_link/> with the Variant image.
+                  
+                 If you require more images to display in search results,
+                 please add an <attribute/> below with <is_return/> true. -->
+            <image_link>https://your.website/image1.jpg</image_link>
+            <additional_image_link>https://your.website/image2.png</additional_image_link>
+            
+            <!-- OPTIONAL.
+                 Used to display swatches within your search results items.
+                 
+                 Populate <swatch_label/> with the value the swatch represents,
+                 for example 'Red' or 'Leopard Print'.
+                 
+                 If your swatch is a block colour, populate <swatch_color/> with a HEX
+                 code or valid colour to be used in CSS rendering. If your swatch is 
+                 multicolour or patterned, you can instead provide a URL to an image of 
+                 the swatch to be displayed, eg: https://your.website/swatches/leopard.png -->
+            <swatch_label>Red</swatch_label>
+            <swatch_color>#ff0000</swatch_color>
+            
+            <!-- OPTIONAL
+                 The rating of your item, a decimal between 0 and 5.
+                 This is used by Klevu to power the "Sort by Rating" sort order. -->
+            <rating>4.5</rating>
+
+            <!-- OPTIONAL and not recommended.
+                 Use this to override the Klevu manual boosting rules.
+                 It is generally recommended to omit this entirely
+                 and let Klevu A.I. rank your items accordingly.
+                 
+                 A value of 1 - 999 indicates a boosting up the rankings.
+                 A value of 0 - 0.9 indicates a de-boosting down the rankings. -->
+            <boosting_score>123.45</boosting_score>
+
+            <!-- OPTIONAL.
+                 A short description of your item.
+                 This content can be indexed for search, therefore
+                 any HTML or <script/> content will be removed by Klevu.
+                 
+                 <short_description/> is returned with your search results.
+                 
+                 Should you need rich formatting such as hyperlinks, bold
+                 or italic text, this cannot be provided as raw HTML.
+                 You will need to try another approach such as Markdown,
+                 but beware that any syntax you add may be searchable.
+                 
+                 For compound products if your content differs per Variant,
+                 you may wish to include the Variant short description for a
+                 better chance customers will find your item, otherwise you can
+                 repeat the same Parent short description for each Variant.-->
+            <short_description><![CDATA[
+                This is a short description of the item.
+            ]]></short_description>
+
+            <!-- OPTIONAL.
+                 A longer description of your item.
+                 This content can be indexed for search, therefore
+                 any HTML or <script/> content will be removed by Klevu.
+                 
+                 <description/> is not returned with your search results.
+                 
+                 For compound products if your content differs per Variant,
+                 you may wish to include the Variant description for a better
+                 chance customers will find your item, otherwise you can repeat
+                 the same Parent description for each Variant. -->
+            <description><![CDATA[
+                This is a longer description of the item.
+            ]]></description>
+
+            <!-- OPTIONAL.
+                 Any keywords or tags you would like to be searchable for your item.
+                 This content will be indexed for search, therefore
+                 any HTML or <script/> content will be removed by Klevu.
+                 
+                 For compound products if your tags differ per Variant,
+                 you may wish to include Variant specific tags for a better
+                 chance customers will find your item, otherwise you can
+                 repeat the same Parent tags for each Variant.-->
+            <keywords>duffle bag, accessories, winter sports</keywords>
+            
+            <!-- OPTIONAL.
+                 The following attributes are provided for convenience as they
+                 occur regularly in Google Merchant Center Product Feeds.
+                 
+                 We define these as `SimpleAttributeType`, which Klevu automatically
+                 converts into a `ComplexAttributeType` using some pre-defined settings.
+                 
+                 These simple attributes can only contain a single value, eg 'Red'.
+                 If you prefer more control over these attributes, omit them entirely
+                 from your item and instead add an entry to <attributes /> below. -->
+
+            <!-- the following will have is_facet: false -->
+            <gtin>123456789</gtin>
+            <mpn>1234567890123</mpn>
+
+            <!-- the following will have is_facet: true -->
+            <brand>Sagaform</brand>
+            <color>Red</color>
+            <size>Large</size>
+            <size_type>Regular</size_type>
+            <age_group>Infant</age_group>
+            <gender>Male</gender>
+            <material>Leather</material>
+            <pattern>Striped</pattern>
+            <condition>New</condition>
+            <unit_pricing_measure>1.5 kg</unit_pricing_measure>
+            <energy_efficiency_class>A++</energy_efficiency_class>
+
+            <!-- OPTIONAL.
+                 The following are additional attributes about your item which you
+                 may freely define. You can specify multiple values for each attribute
+                 and also whether it should be searchable and/or treated as a facet.
+                 
+                 <id/> is the unique identifier of your attribute.
+                 
+                 <name/> is the default label to be associated with the facet.
+                 This can be overridden within the Klevu Merchant Centre.
+                 
+                 <is_facet/> is false by default. If you specify an attribute with <is_facet/> true,
+                 it will automatically be searchable. A facet attribute will always be searchable.
+                 
+                 If you want an attribute to be searchable but not a facet, specify
+                 <is_facet/> false. <is_searchable/> is true by default so no need to specify.
+                  
+                 If you want an attribute to be returned in the search response data,
+                 but neither searchable nor a facet, then you can specify <is_facet/> and
+                 <is_searchable/> as false and <is_return/> as true.
+                 
+                 Note that for any attributes with <is_return/> true, please contact
+                 Klevu Support who will enable these attributes to be included in the response. -->
+            <attributes>
+                
+                <!-- Here we have overridden <color/> above to provide two values, Green and Blue.
+                     The `ComplexAttributeType` will take precedence over the `SimpleAttributeType`. -->
+                <attribute>
+                    <id>color</id>
+                    <name>Color</name>
+                    <is_facet>true</is_facet>
+                    <values>
+                        <value>Green</value>
+                        <value>Blue</value>
+                    </values>
+                </attribute>
+                
+                <!-- Here we have two attributes, both called Size, but with different use-cases.
+                     The first is a generic size, but the second is specific to shoes. These will
+                     appear as different facets when your customer is filtering their selections. -->
+                <attribute>
+                    <id>size</id>
+                    <name>Size</name>
+                    <is_facet>false</is_facet>
+                    <values>
+                        <value>Big</value>
+                    </values>
+                </attribute>
+                <attribute>
+                    <id>size_shoes</id>
+                    <name>Size</name>
+                    <is_facet>true</is_facet>
+                    <values>
+                        <value>3</value>
+                    </values>
+                </attribute>
+                
+                <!-- Each <value/> represents a single attribute option.
+                     Commas and semi-colons are NOT used to split option values.
+                     Special characters can be wrapped in CDATA to pass XML validation. -->
+                <attribute>
+                    <id>occasion</id>
+                    <values>
+                        <value><![CDATA[Gifts, under £50]]></value>
+                        <value><![CDATA[Christmas, Parties & Birthdays]]></value>
+                    </values>
+                </attribute>
+                
+                <!-- Here we have a flag that will be used on the frontend somehow,
+                     which we do not want to be searchable or to be used as a facet. -->
+                <attribute>
+                    <id>some_frontend_flag</id>
+                    <is_facet>false</is_facet>
+                    <is_searchable>false</is_searchable>
+                    <is_return>true</is_return>
+                    <values>
+                        <value>foo_bar_1</value>
+                        <value>foo_bar_2</value>
+                    </values>
+                </attribute>
+            </attributes>
+            
+            <!-- OPTIONAL
+                 Similar to <is_return/> above, you can specify some arbitrary data in this
+                 field which will be returned in your search results. We recommend JSON format
+                 but Klevu will return this data as-is, so the structure is up to you. -->
+            <additional_data_to_return><![CDATA[{"some_arbitrary": "data to return"}]]></additional_data_to_return>
+
+            <!-- REQUIRED for KLEVU_PRODUCT, OPTIONAL for others.
+                 Define which categories your item belongs to.
+                 
+                 There are two ways to do this:
+                 - <product_type/> (this method)
+                 - <categories/> (recommended)
+                 
+                 You must choose one or the other.
+                 If both are specified, only <categories/> will be processed.
+                 
+                 <product_type/> uses the Google format, with each category hierarchy separated
+                 by a > or &gt; character. You can specify multiple <product_type/> elements to
+                 represent each category which the item belongs to.
+                 
+                 The value after the last `>` in each <product_type/> is included as a value for
+                 the category facet. The entire structure is used for Klevu Smart Category Navigation.
+                 The category names must exactly match those used in your store. -->
+            <product_type>Men's &gt; Shoes &gt; Sneakers</product_type>
+            <product_type><![CDATA[Men's>Shoes>Health & Fitness]]></product_type>
+            
+            <!-- WARNING:
+                 If your category names contain > or &gt; you may
+                 have problems with Klevu Smart Category Navigation.
+                 
+                 For example if a single category name is "Sale > Specials!",
+                 Klevu would consider this as two nested categories:
+                 - Sale
+                 - - Specials!
+                 
+                 In this scenario you must either strip the character out,
+                 rename your category or use the <categories/> approach below.-->
+            <product_type><![CDATA[Sale > Specials!]]></product_type>
+
+            <!-- REQUIRED for KLEVU_PRODUCT, OPTIONAL for others.
+                 Define which categories your item belongs to.
+                 
+                 There are two ways to do this:
+                 - <product_type/>
+                 - <categories/> (this method, recommended)
+                 
+                 You must choose one or the other.
+                 If both are specified, only <categories/> will be processed.
+                 
+                 Each <category/> represents a single category,
+                 with each <path/> representing a segment of the hierarchy.
+                 
+                 The last path is used as the value for the category facet.
+                 The entire structure is used for Klevu Smart Category Navigation.
+                 The category names must exactly match those used in your store. -->
+            <categories>
+                
+                <!-- This item belongs to category: Men's / Shoes / Sneakers -->
+                <category>
+                    <path>Men's</path>
+                    <path>Shoes</path>
+                    <path>Sneakers</path>
+                </category>
+
+                <!-- It also belongs to category: Men's > Shoes > Health & Fitness -->
+                <category>
+                    <path>Men's</path>
+                    <path>Shoes</path>
+                    <path><![CDATA[Health & Fitness]]></path>
+                </category>
+
+                <!-- The category name can contain special characters, even ">" -->
+                <category>
+                    <path><![CDATA[Sale > Specials!]]></path>
+                </category>
+            </categories>
+            
+            <!-- OPTIONAL.
+                 Groups give you an opportunity to show specific data to your
+                 customers based on some search-time parameter that you provide.
+                 
+                 For example if logged in customers belonging to a certain group
+                 should see different prices to other customers, you can specify
+                 those values within a group.
+                 
+                 Currently we support item visibility, price and sale price. -->
+            <groups>
+                
+                <!-- OPTIONAL.
+                     Customer group specific visibility.
+                     Use this for B2B functionality to specify which groups 
+                     of visitors should be able to view this particular item.
+                     
+                     All applicable groups must be specified for every item.
+                     Let's assume the store also has a 'customer_group_2', but this item
+                     is not assigned so would not be visible to members of that group. -->
+                <group>
+                    <id>customer_group_1</id>
+                </group>
+                <group>
+                    <id>customer_group_3</id>
+                </group>
+            
+                <!-- OPTIONAL.
+                     Customer group specific price overrides.
+                     Searches for group ID 'vip_customer_group' would return these prices. -->
+                <group>
+                    <id>vip_customer_group</id>
+                    
+                    <sale_price>49.99 GBP</sale_price>
+
+                    <additional_currencies>
+                        <additional_currency>
+                            <sale_price>61.74 USD</sale_price>
+                        </additional_currency>
+                        <additional_currency>
+                            <sale_price>6171 JPY</sale_price>
+                        </additional_currency>
+                    </additional_currencies>
+                </group>
+                
+                <!-- OPTIONAL.
+                     Tax free shopping.
+                     Searches for group ID 'tax_free' would return prices without tax. -->
+                <group>
+                    <id>tax_free</id>
+            
+                    <price>102.87 GBP</price>
+                    <sale_price>83.33 GBP</sale_price>
+                </group>
+            </groups>
+        </item>
+        
+    </channel>
+</rss>

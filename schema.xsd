@@ -1,0 +1,1250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.1">
+    <xs:annotation>
+        <xs:documentation><![CDATA[
+            XML Schema for Klevu feed files. https://www.klevu.com
+            Please use a validator that supports the XML Schema 1.1 standard.
+            
+            The Klevu schema is loosely based on Google's Product data specification,
+            with some modifications according to our own internal requirements:
+            https://support.google.com/merchants/answer/7052112
+
+            Google feeds include a g: namespace for many elements. To make your
+            life easier we allow you to either include or omit this g: prefix.
+            For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
+        ]]></xs:documentation> 
+    </xs:annotation>
+
+    <xs:element name="rss">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="channel" type="ChannelType" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:decimal" use="required" fixed="2.0"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="ChannelType">
+        <xs:sequence>
+            <xs:element name="title" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation>The title of your store, for reference purposes only.</xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="200" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="link" type="UrlType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The URL to your store, for reference purposes only.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="meta" type="MetaType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Optional arbitrary information about this particular feed.
+                        It's structure and contents are entirely up to you,
+                        however it must contain valid XML elements.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="item" type="ItemType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Each item represents an entity in your data feed,
+                        for example a Product, Category, CMS or Custom entity.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MetaType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                This section will not be validated or processed by Klevu.
+                It can be used for anything you like, in any format you like,
+                however it must contain valid XML elements.
+                
+                For example, if your feed includes currency conversions you may include
+                information relating to the conversion rates used.
+
+                For example you might include a reference to the currency rate used,
+                or the various price differences you have for a particular product:
+                <meta>
+                    <currencies>
+                        <currency code="USD" rate="1.23" />
+                        <currency>
+                            <code>JPY</code>
+                            <rate>123.45</rate>
+                        </currency>
+                    </currencies>
+                    <prices>
+                        <tax class="Default Tax Class" rate="20.00" />
+                        <includingTax>123.45</includingTax>
+                        <excludingTax>102.88</excludingTax>
+                        <retailPrice>149.99</retailPrice>
+                    </prices>
+                </meta>
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ItemType">
+        <xs:sequence>
+            <xs:element name="meta" type="MetaType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Optional arbitrary information about this particular item.
+                        It's structure and contents are entirely up to you.
+
+                        API Response Format: N/A
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="id" type="ItemIdType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        This is your item's unique identifier.
+                        See `ItemIdType` for detailed information about formatting.
+                        
+                        API Response Format: id, itemId, itemGroupId
+                        - id: "p54321-v54321"
+                        - itemId: "v54321"
+                        - itemGroupId: "p54321"
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="item_group_id" type="ItemIdType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        This identifies the parent of your item for grouping.
+                        See `ItemIdType` for detailed information about formatting.
+                        
+                        For simple, non-compound items this element can be omitted.
+                    
+                        For compound items, populate <item_group_id/> with the ID of the
+                        parent item which ties all of the variant or child items together,
+                        and populate <id/> with the ID of the variant or child item.
+        
+                        Klevu will combine <item_group_id/> with <id /> to make an identifier
+                        for the item, for example Product p54321 and Variant v12345
+                        would have a combined ID of p54321-v12345.
+                        
+                        API Response Format: id, itemId, itemGroupId
+                        - id: "p54321-v54321"
+                        - itemId: "v54321"
+                        - itemGroupId: "p54321"
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="item_type" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation>
+                            The type of the item. Klevu defaults are:
+                            KLEVU_PRODUCT, KLEVU_CATEGORY, KLEVU_CMS.
+    
+                            You can also add your own item types, eg:
+                            ACME_RECIPE, FOO_BAR, SOME_CUSTOM_ENTITY
+                            
+                            If this element is omitted, Klevu will
+                            populate with the default value KLEVU_PRODUCT.
+    
+                            API Response Format: typeOfRecord
+                            - typeOfRecord: "KLEVU_PRODUCT"
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            
+            <xs:element name="sku" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation>
+                            The Stock Keeping Unit (SKU) associated to the item.
+                            This is required for Products, but optional for other item types.
+        
+                            API Response Format: sku
+                            - sku: "ABC-123"
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="title" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation>
+                            The name or title associated with the item.
+                            The maximum length allowed is 150 characters.
+
+                            API Response Format: name
+                            - name: "Joust Duffle Bag"
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="150" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="link" type="UrlType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        The URL to your item.
+                        It must start with either http:// or https://
+                        
+                        API Response Format: url
+                        - url: "https://your.website/item-detail-page.html"
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="availability" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            The stock status of the item, if applicable.
+                            
+                            Klevu will also populate the flag <inStock /> with "yes" or "no",
+                            which is used in conjunction with your own settings of whether
+                            you would like to show out of stock products or not.
+                            
+                            API Response Format: inStock, availability
+                            - inStock: "yes" or "no"
+                            - availability: "In Stock" or "Out of Stock"
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="[Ii]n [Ss]tock" />
+                        <xs:pattern value="[Oo]ut of [Ss]tock" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="published_at" type="DateTimeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The date the item was created or published,
+                        used for new arrivals ranking and sorting.
+
+                        API Response Format:
+                        - publishedAt: "1999-12-31T23:59:59​+0100"
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="price" type="PriceType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The price of the item with the base currency.
+                        When used in conjunction with sale_price, this will become the 'was price'.
+                        For example: Was {price}, Now {sale_price}.
+
+                        Please refer to `PriceType` for the correct formatting to use.
+                        Note you should use the same base currency for all items in the feed.
+                        
+                        If omitted, a default value of 0 will be used by Klevu.
+
+                        API Response Format: price, currency, storeBaseCurrency
+                        - price: "123.45"
+                        - currency: "GBP"
+                        - storeBaseCurrency: "GBP"
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="sale_price" type="PriceType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        The sale price of the item with the base currency.
+                        When used in conjunction with price, this will become the 'now price'.
+                        For example: Was {price}, Now {sale_price}.
+
+                        Please refer to `PriceType` for the correct formatting to use.
+                        Note you should use the same base currency for all items in the feed.
+
+                        If omitted, the value of <price /> will be used by Klevu.
+                        
+                        For compound items, Klevu will automatically compare the lowest and
+                        highest price and save those values against all variants as <startPrice/>
+                        and <toPrice/>. This calculation does not consider stock status, so if the
+                        highest and lowest price variants are OOS, their values are still used.
+                        
+                        API Response Format: salePrice, currency, storeBaseCurrency
+                        - salePrice: "100.00"
+                        - startPrice: "50.00"
+                        - toPrice: "200.00"
+                        - currency: "GBP"
+                        - storeBaseCurrency: "GBP"
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="additional_currencies" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        The price and sale price of the item, converted to other currencies.
+                        
+                        Values should be submitted in pairs. If you specify a <price/> you should
+                        also specify a <sale_price/> and vice versa, to avoid unexpected behaviour.
+                        
+                        If <price/> is omitted, the base currency value of <price/> will be used.
+                        If <sale_price/> omitted, the <price /> in the same currency will be used.
+                        
+                        API Response Format: price, salePrice, currency, storeBaseCurrency
+                        - price: "151.66"
+                        - salePrice: "122.92"
+                        - currency: "USD"
+                        - storeBaseCurrency: "GBP"
+                    ]]></xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="additional_currency" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="price" type="PriceType" minOccurs="0" maxOccurs="unbounded"/>
+                                    <xs:element name="sale_price" type="PriceType" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="image_link" type="UrlType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        The main image of your item.
+                        It must start with either http:// or https://
+                        
+                        API Response Format: image
+                        - image: "https://your.website/image1.jpg"
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="additional_image_link" type="UrlType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        The secondary image of your item.
+                        It must start with either http:// or https://
+                        
+                        API Response Format: imageHover
+                        - imageHover: "https://your.website/image2.jpg"
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="swatch_label" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            The swatch label for this item.
+                            This is the label that corresponds to the swatch image or colour.
+                            For example: Red.
+                            
+                            We support up to 20 swatches per compound item. If you provide swatch data
+                            for 20+ records with the same <item_group_id/>, the swatch data from the
+                            first 20 will be processed and the rest will be ignored. This allocation
+                            does not take stock status into account, so even OOS items are included
+                            in the swatch data associated to each sibling variant.
+                            
+                            API Response Format: swatches
+                            - swatches: 
+                            - - swatch: 
+                            - - - color: Red
+                            - - - swatchImage: #ff0000
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="swatch_color" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            The swatch colour or image to be displayed for this item.
+                            
+                            This is the colour that corresponds to the swatch label added.
+                            For example: #ff0000 or red.
+                            
+                            Alternatively for more complex swatches like multicolour or patterned,
+                            you can provide the URL to a swatch image to be used.
+                            For example: https://your.website/swatches/multicolour.png.
+                            
+                            If providing a URL, please see `UrlType` for the URL definition.
+                            
+                            API Response Format: swatches
+                            - swatches: 
+                            - - swatch: 
+                            - - - color: Red
+                            - - - swatchImage: #ff0000
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="2000" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            
+            <xs:element name="rating" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            The rating of the item.
+                            A decimal number between 0 and 5.
+                            
+                            API Response Format: swatches
+                            - swatches: 
+                            - - swatch: 
+                            - - - color: Red
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="0"/>
+                        <xs:maxInclusive value="5"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            
+            <xs:element name="boosting_score" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            Override the Klevu manual boosting rules.
+                             
+                            A value of 1 - 999 indicates a boosting up the rankings.
+                            A value of 0 - 0.9 indicates a de-boosting down the rankings.
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="0"/>
+                        <xs:maxInclusive value="999"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            
+            <xs:element name="short_description" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation>
+                            The short description associated with the item.
+                            Any HTML characters are stripped out and removed.
+                            
+                            The maximum length allowed is 1000 characters.
+                            Any additional characters after this will be truncated.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="1000" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="description" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation>
+                            The long description associated with the item.
+                            Any HTML characters are stripped out and removed.
+                            
+                            The maximum length allowed is 5000 characters.
+                            Any additional characters after this will be truncated.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="5000" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            
+            <xs:element name="keywords" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation>
+                            Any keywords or tags associated with the item.
+                            Any HTML characters are stripped out and removed.
+                            
+                            The maximum length allowed is 1000 characters.
+                            Any additional characters after this will be truncated.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="1000" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="gtin" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The Global Trade Item Number (GTIN) of the item.
+                        For example, 3234567890126
+                        
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: false
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="mpn" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The Manufacturer Part Number (MPN) of the item.
+                        For example, KL12345EVU
+
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: false
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="brand" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The brand associated to the item.
+                        For example, Nike or Adidas.
+                        
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="color" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The Color of the item.
+                        For example, Red.
+                        
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="size" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The Size of the item.
+                        For example, Large or 32.
+                        
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="size_type" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Your clothing product's cut.
+                        For example, Regular, Petite, Oversize or Maternity.
+                        
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="age_group" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The demographic for which your product is intended.
+                        For example, Newborn, Infant, Toddler, Child or Adult.
+
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="gender" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The gender of your item.
+                        For example, Male, Female or Unisex.
+
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="material" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Your product's fabric or material.
+                        For example, Leather.
+
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="pattern" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Your product's pattern or graphic print.
+                        For example, Striped.
+
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="condition" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The condition of your item.
+                        For example, New, Refurbished or Used.
+                        
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="unit_pricing_measure" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The measure and dimension of your product as it is sold.
+                        For example, 1.5 kg.
+                        
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="energy_efficiency_class" type="SimpleAttributeType" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Your product's energy label.
+                        For example, A++, B or E.
+                        
+                        `SimpleAttributeType` will use the following values for this element:
+                        - is_facet: true
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="attributes" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Define additional attributes for your item,
+                        which can include multiple values and also
+                        specify whether to include as a facet.
+                        
+                        See `ComplexAttributeType` for more information.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="attribute" type="ComplexAttributeType" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="additional_data_to_return" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            Please note that this should be used with caution, as all data
+                            provided will be returned with your item, thus increasing the data
+                            size for search results. This can slow down your search experience.
+                        
+                            Similar to the use of <is_return/> within `ComplexAttributeType`
+                            this element is provided for you to add free format data which
+                            will be returned in search results with your item. This can be
+                            used for frontend logic or rendering.
+                            
+                            The format of this data is up to you, as it will be returned
+                            as-is, however any HTML should be escaped into HTML entities
+                            as they would be stripped during the index process.
+                            
+                            We recommend JSON as the best format to use, for example:
+                            {"some_arbitrary": "data to return", "and_some_flag": true}
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="5000" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="product_type" minOccurs="0" maxOccurs="unbounded">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            There are two ways to send item category associations to Klevu:
+                            - <product_type/> (this method)
+                            - <categories/> (recommended)
+                            
+                            You must choose one or the other. You cannot mix and match.
+                            If both are specified, only <categories/> will be processed.
+                            
+                            <product_type/> uses the Google format, with each category
+                            hierarchy separated by a > or &gt; character. Each section of
+                            each individual category hierarchy must be 50 characters or less.
+
+                            You can specify multiple <product_type/> elements to represent
+                            each category which the item belongs to.
+
+                            The value after the last `>` in each <product_type/> is included as a
+                            value for the category facet. The entire structure is used for Klevu Smart
+                            Category Navigation. The category names must exactly match those used in your store.
+    
+                            API Response Format: category, klevu_category
+                            - category: "Sneakers"
+                            - klevu_category: "KLEVU_PRODUCT;;Mens;Shoes;Sneakers;;;@ku@kuCategory@ku@"
+                            
+                            In this example, the product belongs to Mens > Shoes > Sneakers category.
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="750" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            
+            <xs:element name="categories" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        There are two ways to send item category associations to Klevu:
+                        - <product_type/>
+                        - <categories/> (this method, recommended)
+                        
+                        You must choose one or the other. You cannot mix and match.
+                        If both are specified, only <categories/> will be processed.
+                        
+                        Each <category/> represents a single category,
+                        with each <path/> representing a segment of the hierarchy.
+                         
+                        The last path is used as the value for the category facet.
+                        The entire structure is used for Klevu Smart Category Navigation.
+                        The category names must exactly match those used in your store.
+
+                        API Response Format: category, klevu_category
+                        - category: "Sneakers"
+                        - klevu_category: "KLEVU_PRODUCT;;Mens;Shoes;Sneakers;;;@ku@kuCategory@ku@"
+                        
+                        In this example, the product belongs to Mens > Shoes > Sneakers category.
+                    ]]></xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="category" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="path" minOccurs="1" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:annotation>
+                                                <xs:documentation><![CDATA[
+                                                    An individual Category name that makes up part of the path
+                                                    of the full Category Tree you are currently describing.
+                                                    
+                                                    For example, for Men's / Shoes / Sneakers:
+                                                    <category>
+                                                        <path>Men's</path>
+                                                        <path>Shoes</path>
+                                                        <path>Sneakers</path>
+                                                    </category>
+                                                ]]></xs:documentation>
+                                            </xs:annotation>
+                                            <xs:restriction base="xs:string">
+                                                <xs:maxLength value="50" />
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="groups" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        Groups give you an opportunity to show specific data to your
+                        customers based on some search-time group value that you provide.
+                         
+                        For example, if logged in customers belonging to a certain group
+                        should see different prices to other customers, you can specify
+                        those override values within a group.
+                        
+                        Currently for each item we support:
+                        - price & sale price (group-specific prices)
+                        - visibility (whether the product should appear in results)
+                    ]]></xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="group" minOccurs="0" maxOccurs="50">
+                            <xs:annotation>
+                                <xs:documentation><![CDATA[
+                                    Klevu Groups have multiple uses, detailed below.
+                                
+                                    --
+                                
+                                    B2B Visibility:
+                                    Specify which groups of visitors should be able to view this
+                                    particular item, to allow for B2B functionality in your search.
+                                    
+                                    All applicable groups must be specified for every item.
+                                    
+                                    If you do not wish to use visibility functionality,
+                                    please omit this node entirely from your feed and
+                                    do not include `visibilityGroupID` param in searches.
+                                    
+                                    --
+                                    
+                                    Group Data Overrides:
+                                    Specific values which may differ on a per-group basis.
+                                    
+                                    For example if a particular customer group should see different
+                                    versions of your item prices, you can specify those values here.
+                                    
+                                    If you do not wish to use group override functionality,
+                                    please omit this node entirely from your feed and
+                                    do not include `priceFieldSuffix` param in searches.
+                                    
+                                    --
+                                    
+                                    The maximum number of groups you can specify,
+                                    for the entire store, is 50. If you specify more
+                                    than 50 groups you may see unexpected behaviour.
+                                ]]></xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="id" type="GroupIdType" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation><![CDATA[
+                                                An ID must be specified for every group in your
+                                                system which you may include as a search parameter.
+                                                This ID is used for visibility and overrides.
+                                                
+                                                --
+                                                
+                                                Visibility:
+                                                For example, take this search query:
+                                                /search?term=shoes & visibilityGroupID = group_3
+                                                
+                                                The above search would only include items which have:
+                                                <group>
+                                                    <id>group_3</id>
+                                                </group>
+                                                
+                                                Any items without <id>group_3</id> specified would
+                                                be excluded by Klevu from the search results.
+                                                
+                                                --
+                                            
+                                                Data Overrides:
+                                                For example, take this search query:
+                                                /search?term=shoes & priceFieldSuffix = USD-group_3
+                                                
+                                                The above search would display USD prices that
+                                                are specific to the group with ID: group_3
+                                                
+                                                <group>
+                                                    <id>group_3</id>
+                                                    <sale_price>49.99 GBP</sale_price>
+                                                    <additional_currencies>
+                                                        <additional_currency>
+                                                            <sale_price>61.74 USD</sale_price>
+                                                        </additional_currency>
+                                                    </additional_currencies>
+                                                </group>
+                                                
+                                                In the above example, for group_3 the price
+                                                used in search results would be 61.74 USD                                 
+                                            ]]></xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+
+                                    <xs:element name="price" type="PriceType" minOccurs="0" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation><![CDATA[
+                                                The price of the item, specific to this particular group.
+                                                You need only include prices which differ from the base price.
+                                                If omitted, the base value of <price /> will be used for this group.
+                                                
+                                                For example:
+                                                <item>
+                                                    <price>200 GBP</price>
+                                                    <sale_price>100 GBP</sale_price>
+                                                    <groups>
+                                                        <group>
+                                                            <id>group_3</id>
+                                                            <sale_price>300 GBP</sale_price>
+                                                        </group>
+                                                    </groups>                                                 
+                                                </item>
+                                                
+                                                In this example, since <price/> is not specified for
+                                                group_3, the value will inherit from the base price,
+                                                ie. for group_3 price is 200 GBP and sale_price is 300 GBP
+                                            ]]></xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+
+                                    <xs:element name="sale_price" type="PriceType" minOccurs="0" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation><![CDATA[
+                                                The sale price of the item, specific to this particular group.
+                                                You need only include sale prices which differ from the base sale price.
+                                                If omitted, the base value of <sale_price /> will be used for this group.
+                                                
+                                                For example:
+                                                <item>
+                                                    <price>200 GBP</price>
+                                                    <sale_price>100 GBP</sale_price>
+                                                    <groups>
+                                                        <group>
+                                                            <id>group_3</id>
+                                                            <price>400 GBP</price>
+                                                        </group>
+                                                    </groups>
+                                                </item>
+                                                
+                                                In this example, since <sale_price/> is not specified for
+                                                group_3, the value will inherit from the base sale price,
+                                                ie. for group_3 price is 400 GBP and sale_price is 100 GBP
+                                            ]]></xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+
+                                    <xs:element name="additional_currencies" minOccurs="0" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        The price and sale price of the item, converted to other currencies.
+                                                        You need only include prices that differ from the base price for that
+                                                        currency. If either <price/> or <sale_price/> are omitted, they will
+                                                        inherit from the base version of that additional currency.
+                                                        
+                                                        For example:
+                                                        <item>
+                                                            <price>200 GBP</price>
+                                                            <sale_price>100 GBP</sale_price>
+                                                            
+                                                            <additional_currencies>
+                                                                <additional_currency>
+                                                                    <price>400 USD</price>
+                                                                    <sale_price>300 USD</sale_price>
+                                                                </additional_currency>                                                                
+                                                            </additional_currencies>
+                                                            
+                                                            <groups>
+                                                                <group>
+                                                                    <id>group_3</id>
+                                                                    <price>600 GBP</price>
+                                                                    <sale_price>500 GBP</sale_price>
+                                                                    <additional_currencies>
+                                                                        <additional_currency>
+                                                                            <sale_price>700 USD</sale_price>
+                                                                        </additional_currency>                                                                
+                                                                    </additional_currencies>
+                                                                </group>
+                                                            </groups>                                                 
+                                                        </item>
+                                                        
+                                                        In this example, since no USD <price /> is specified for group_3,
+                                                        the value will inherit from the base additional currency,
+                                                        ie. for group_3 price is 400 USD and sale_price is 700 USD.
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="additional_currency" minOccurs="1" maxOccurs="unbounded">
+                                                    <xs:complexType>
+                                                        <xs:sequence>
+                                                            <xs:element name="price" type="PriceType" minOccurs="0" maxOccurs="unbounded"/>
+                                                            <xs:element name="sale_price" type="PriceType" minOccurs="0" maxOccurs="unbounded"/>
+                                                        </xs:sequence>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:simpleType name="ItemIdType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                A unique identifier for an item.
+                Alpha-numeric with underscores only.
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+            <xs:pattern value="[a-zA-Z0-9_]+" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="AttributeIdType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                A unique identifier for an attribute.
+                
+                This value must start with a letter,
+                then alpha-numeric with underscores only. 
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50" />
+            <xs:pattern value="([a-zA-Z]+)([a-zA-Z0-9_-]+)" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="GroupIdType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                A unique identifier for a group.
+                Alpha-numeric with underscores only.
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+            <xs:pattern value="[a-zA-Z0-9_-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="UrlType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                A URL must be absolute and not relative,
+                starting with either http:// or https://
+                
+                For example, <foo>http://your.website.com/shoes</foo>
+                
+                Relative URLs are invalid, eg. <foo>/shoes</foo> is invalid.
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:anyURI">
+            <xs:maxLength value="2000" />
+            <xs:pattern value="https?://.+" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="DateTimeType">
+        <xs:annotation>
+            <xs:documentation>
+                Must be ISO 8601 date format:
+                - YYYY-MM-DD
+                - YYYY-MM-DDThh:mm:ss
+                - YYYY-MM-DDThh:mm:ssZ
+
+                For example, 23:59:59 on 31st December 1999 (timezone UTC+1):
+                - 1999-12-31
+                - 1999-12-31T23:59:59​
+                - 1999-12-31T23:59:59​+0100
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="PriceType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                Please format prices using the unit cost of the item, to maximum two decimal places,
+                followed by the corresponding currency for this price.
+                For example: 1234567.89 USD
+                
+                This is the format found in Google XML feeds, combining price value with currency.
+                
+                For european currencies, do NOT use a comma for the decimal part,
+                eg. 123,00 EUR is invalid, it should be 123.00 EUR
+                
+                For larger values, do NOT include a comma for thousands,
+                eg. 123,456 JPY is invalid, it should be 123456 JPY 
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]+(\.[0-9]{2})? [a-zA-Z]{3}" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="SimpleAttributeType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                These are commonly found attributes that are made available for your convenience.
+                As a result we use some hard-coded values for the attribute appearance and logic.
+                
+                Internally, Klevu converts these `SimpleAttributeType` entries into a `ComplexAttributeType`.
+                If you require more control, you can instead define the attribute as a `ComplexAttributeType`.
+                
+                With this conversion, the following will always apply:
+                - id: the element name, converted to lowercase (eg. color)
+                - name: the element name, lowercase with an uppercase first letter (eg. Color)
+                - values: the single value provided (eg. Red)
+                - is_searchable: true
+                - is_return: false
+                
+                The following will vary depending on each individual element definition:
+                - is_facet: true or false depending on the attribute
+                
+                For example, <color>Red</color> is the same as:
+                <attributes>
+                    <attribute>
+                        <id>color</id>
+                        <name>Color</name>
+                        <values>
+                            <value>Red</value>
+                        </values>
+                        <is_facet>true</is_facet>
+                        <is_searchable>true</is_searchable>
+                        <is_return>false</is_return>
+                    </attribute>
+                </attributes>
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="200" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ComplexAttributeType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                If you cannot find a suitable element to populate with some data you
+                would like to be indexed with Klevu, you can define your own custom attributes.
+                These attributes can be searchable and also used to create Facets.
+                
+                For example, you may want to include attributes such as Occasion,
+                Material, Special Features, etc. depending on your catalog data.
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="id" type="AttributeIdType" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        The unique identifier of the attribute.
+                        
+                        If the same ID is used as a `SimpleAttributeType`, it is 
+                        this `ComplexAttributeType` which will take precedence.
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="name" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            Required if <is_facet/> is true.
+                            This is used as the default heading of your Facet.
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="200" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            
+            <xs:element name="is_facet" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        Whether to use this attribute as a Facet.
+                        The default value is: false.
+                        
+                        All attributes sharing the same <id/> will be grouped
+                        together to display as filters or facets in the search results.
+                        
+                        For example:
+                        Color [color]:
+                        - Red
+                        - Blue
+                        - Green
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="is_searchable" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        Whether the values provided should be searchable.
+                        The default value is: true.
+                        
+                        Note that if <is_facet/> is true, this will automatically be true,
+                        even if you specify it as false. The main use-case for this flag
+                        is when used in conjunction with <is_return/> for the scenario
+                        where you want an attribute to be returned, but NOT searchable.
+                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="is_return" type="xs:boolean" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Whether the values provided should be returned with search results.
+                        Set this to true if you want to render the values on your frontend.
+                        
+                        Note: at the time of writing some manual work is required at Klevu
+                        to enable each attribute for return, so this flag is used to help
+                        our team identify which attributes you would like us to enable.
+                        
+                        The default value is: false.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="values" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="value" minOccurs="1" maxOccurs="50">
+                            <xs:simpleType>
+                                <xs:annotation>
+                                    <xs:documentation><![CDATA[
+                                        The value of the attribute.
+                                        
+                                        If multiple values apply to the same attribute,
+                                        please specify each in a separate <value /> element.
+                                        You can specify up to 50 values per attribute.
+                                    ]]></xs:documentation>
+                                </xs:annotation>
+                                <xs:restriction base="xs:string">
+                                    <xs:maxLength value="200" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
