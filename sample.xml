@@ -14,8 +14,8 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
 -->
 <rss
     version="2.0"
-    xsi:noNamespaceSchemaLocation="./schema.xsd"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/klevu/feed/2.0/schema.xsd">
     
     <!-- REQUIRED.
          This Rss > Channel > Title, Link and Item structure matches
@@ -372,8 +372,9 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                      Special characters can be wrapped in CDATA to pass XML validation. -->
                 <attribute>
                     <id>occasion</id>
+                    <is_facet>true</is_facet>
                     <values>
-                        <value><![CDATA[Gifts, under £50]]></value>
+                        <value>Gifts, under £50</value>
                         <value><![CDATA[Christmas, Parties & Birthdays]]></value>
                     </values>
                 </attribute>
