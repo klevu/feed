@@ -1023,7 +1023,7 @@
                 A unique identifier for an attribute.
                 
                 This value must start with a letter,
-                then alpha-numeric with underscores only. 
+                then alpha-numeric with dashes or underscores only.
             ]]></xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
@@ -1036,7 +1036,7 @@
         <xs:annotation>
             <xs:documentation><![CDATA[
                 A unique identifier for a group.
-                Alpha-numeric with underscores only.
+                Alpha-numeric with dashes or underscores only.
             ]]></xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">

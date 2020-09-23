@@ -48,7 +48,7 @@ That's it!
 You can also find some additional [Examples](./examples) which focus on specific
 scenarios to give you an idea of how to provide various data to Klevu.
 
-> :information_source: **Please note that these examples contain partial data**, focusing only 
+> :warning: **Please note that these examples contain partial data**, focusing only 
 on the particular scenario being highlighted. For example some of them do not include required
 fields such as &lt;id/&gt;, so please cross-reference them with the XSD Schema.
 

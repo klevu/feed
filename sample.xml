@@ -382,7 +382,7 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                 <!-- Here we have a flag that will be used on the frontend somehow,
                      which we do not want to be searchable or to be used as a facet. -->
                 <attribute>
-                    <id>some_frontend_flag</id>
+                    <id>some-frontend-flag</id>
                     <is_facet>false</is_facet>
                     <is_searchable>false</is_searchable>
                     <is_return>true</is_return>
@@ -516,9 +516,9 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                 
                 <!-- OPTIONAL.
                      Tax free shopping.
-                     Searches for group ID 'tax_free' would return prices without tax. -->
+                     Searches for group ID 'tax-free' would return prices without tax. -->
                 <group>
-                    <id>tax_free</id>
+                    <id>tax-free</id>
             
                     <price>102.87 GBP</price>
                     <sale_price>83.33 GBP</sale_price>
