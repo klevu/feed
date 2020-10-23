@@ -1,10 +1,8 @@
-# Klevu Feed Format (beta)
+# Klevu Feed Format (FeedV2)
 
-**This is a beta feed format.**
-Do not use unless you have been explicitly asked to by a Klevu team member.
-
-Instead please use our existing feed format, which is detailed here: 
-[Feed format for Custom stores](https://support.klevu.com/knowledgebase/feed-format-for-custom-stores/)
+**October 2020:** This is our new Klevu XML Feed Format, also known as *FeedV2*.
+It is currently in **beta** as we carefully monitor all new submissions,
+but has been tested thoroughly and is ready for public use.
 
 # Integration Steps
 
