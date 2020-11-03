@@ -49,17 +49,3 @@ scenarios to give you an idea of how to provide various data to Klevu.
 > :warning: **Please note that these examples contain partial data**, focusing only 
 on the particular scenario being highlighted. For example some of them do not include required
 fields such as &lt;id/&gt;, so please cross-reference them with the XSD Schema.
-
-# Not yet supported
-
-As mentioned at the top of this document, the Klevu Feed is in beta phase, and while we are making
-our best efforts to ensure all of the information provided is accurate, there may be some discrepancies.
-
-> :warning: **The following features are not yet supported**, but are included in the XSD Schema and
-Sample XML file as they may be coming soon as part of the beta period.
-
-- **Custom Record Types are not supported**, for example ACME_RECIPE or ACME_SHOP.
-Currently only KLEVU_PRODUCT, KLEVU_CATEGORY and KLEVU_CMS are supported.
-- **Group-currency price fallback to the base additional currency is not supported**.
-Please specify &lt;price/&gt; and &lt;sale_price/&gt; for all groups and currencies,
-even if they do not differ for that particular group.
