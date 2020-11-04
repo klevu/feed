@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+Magento customers migrating from the Klevu extension
+must provide their data in a specific format to ensure backward compatibility.
+
+IMPORTANT: Please inform Klevu Support that you are migrating from Magento extension,
+so they can ensure the data is validated and will continue to work as expected,
+paying particular attention to the items below.
+-->
+<rss>
+    <channel>
+        <item>
+            <!-- the <id/> must be the ID of your child or simple product -->
+            <id>54321</id>
+            
+            <!-- the <item_group_id/> must be the ID of your parent product, or empty for simples -->
+            <item_group_id>12345</item_group_id>
+            
+            <!-- Klevu will combine these together for a final record ID,
+                 eg. 12345-54321. -->
+
+            <!-- if you are currently using tier prices to display group-specific prices on your frontend,
+                 you must provide the data in the format below, and contact Klevu support for a config change.
+                 Please see https://support.klevu.com/knowledgebase/magento-group-prices-and-catalog-price-rules/ -->
+            <groups>
+                <group>
+                    <!-- the <id/> is the ID of the customer group,
+                         eg. 1 for General, or 32000 for All Groups. -->
+                    <id>1</id>
+                    
+                    <!-- the <name/> is the name of the customer group,
+                         eg. General or Wholesale. -->
+                    <name>General</name>
+                    
+                    <!-- the <sale_price/> is the tier price value for QTY:1 of an item.
+                         Note. we do not support tier prices with quantities greater than 1. -->
+                    <sale_price>123.45 GBP</sale_price>
+                </group>
+            </groups>
+        </item>
+    </channel>
+</rss>

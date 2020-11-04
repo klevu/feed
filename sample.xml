@@ -15,7 +15,7 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
 <rss
     version="2.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/klevu/feed/2.0/schema.xsd">
+    xsi:noNamespaceSchemaLocation="schema.xsd">
     
     <!-- REQUIRED.
          This Rss > Channel > Title, Link and Item structure matches
@@ -93,7 +93,11 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                  Klevu will combine this to a final ID of p54321-v12345.
                  
                  For non-compound items you should omit <item_group_id/>
-                 and populate <id/> with the ID of the item, eg. p54321. -->
+                 and populate <id/> with the ID of the item, eg. p54321.
+                 
+                 IMPORTANT: Magento customers migrating from the Klevu extension
+                 must provide the ID data in a specific format to ensure backward compatibility.
+                 Please refer to the example: /examples/magento-backward-compatibility.xml -->
             <id>v12345</id>
             <item_group_id>p54321</item_group_id>
             
@@ -482,7 +486,13 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                  should see different prices to other customers, you can specify
                  those values within a group.
                  
-                 Currently we support item visibility, price and sale price. -->
+                 Currently we support item visibility, price and sale price.
+                 
+                 IMPORTANT: Magento customers migrating from the Klevu extension
+                 to XML Feed approach, who wish to retain existing group/tier price logic, 
+                 must provide the group data in a specific format to ensure backward compatibility.
+                 Please refer to the example: /examples/magento-backward-compatibility.xml
+                 -->
             <groups>
                 
                 <!-- OPTIONAL.

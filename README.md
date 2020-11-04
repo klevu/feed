@@ -49,3 +49,15 @@ scenarios to give you an idea of how to provide various data to Klevu.
 > :warning: **Please note that these examples contain partial data**, focusing only 
 on the particular scenario being highlighted. For example some of them do not include required
 fields such as &lt;id/&gt;, so please cross-reference them with the XSD Schema.
+
+# Not yet supported
+
+As mentioned at the top of this document, the Klevu Feed is in beta phase, and while we are making
+our best efforts to ensure all of the information provided is accurate, there may be some discrepancies.
+
+> :warning: **The following features are not yet supported**, but are included in the XSD Schema and
+Sample XML file as they may be coming soon as part of the beta period.
+
+- **Magento group/tier prices are not currently supported**,
+for example Wholesale or Retail pricing, where our Magento extension exports group prices in a
+[particular format](https://support.klevu.com/knowledgebase/magento-group-prices-and-catalog-price-rules/).
