@@ -4,6 +4,11 @@
 It is currently in **beta** as we carefully monitor all new submissions,
 but has been tested thoroughly and is ready for public use.
 
+# FAQ and Documentation
+
+Please visit support.klevu.com for full documentation and answers to the most common questions:  
+[https://support.klevu.com/knowledgebase/feed-format](https://support.klevu.com/knowledgebase/feed-format)
+
 # Integration Steps
 
 The Klevu Feed is a method of providing your store data to be synced with Klevu.
@@ -61,3 +66,10 @@ Sample XML file as they may be coming soon as part of the beta period.
 - **Magento group/tier prices are not currently supported**,
 for example Wholesale or Retail pricing, where our Magento extension exports group prices in a
 [particular format](https://support.klevu.com/knowledgebase/magento-group-prices-and-catalog-price-rules/).
+
+# Need help?
+
+Find answers to the most common questions on the Klevu Support website:  
+[https://support.klevu.com/knowledgebase/feed-format](https://support.klevu.com/knowledgebase/feed-format)
+
+If you still can't find what you're looking for, please contact Klevu Support (support@klevu.com).
