@@ -708,9 +708,9 @@
                             
                             <product_type/> uses the Google format, with each category
                             hierarchy separated by a > or &gt; character. Each section of
-                            each individual category hierarchy must be 50 characters or less.
+                            each individual category hierarchy must be 100 characters or less.
                             For example, for <product_type>AAA > BBB > CCC</product_type>
-                            you must ensure each of AAA, BBB and CCC are 50 characters or less.
+                            you must ensure each of AAA, BBB and CCC are 100 characters or less.
 
                             You can specify multiple <product_type/> elements to represent
                             each category which the item belongs to.
@@ -777,7 +777,7 @@
                                                 ]]></xs:documentation>
                                             </xs:annotation>
                                             <xs:restriction base="xs:string">
-                                                <xs:maxLength value="50" />
+                                                <xs:maxLength value="100" />
                                             </xs:restriction>
                                         </xs:simpleType>
                                     </xs:element>

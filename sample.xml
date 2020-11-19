@@ -417,9 +417,9 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                  by a > or &gt; character. You can specify multiple <product_type/> elements to
                  represent each category which the item belongs to.
                  
-                 Each section of each individual category hierarchy must be 50 characters or less.
+                 Each section of each individual category hierarchy must be 100 characters or less.
                  For example, for <product_type>AAA > BBB > CCC</product_type> you must ensure
-                 each of AAA, BBB and CCC are 50 characters or less.
+                 each of AAA, BBB and CCC are 100 characters or less.
                  
                  The value after the last `>` in each <product_type/> is included as a value for
                  the category facet. The entire structure is used for Klevu Smart Category Navigation.
@@ -452,6 +452,10 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                  
                  Each <category/> represents a single category,
                  with each <path/> representing a segment of the hierarchy.
+                 
+                 The <path/> of each individual category hierarchy must be 100 characters or less.
+                 For example, for <category><path>AAA</path><path>BBB</path></category> you must
+                 ensure each of AAA and BBB are 100 characters or less.
                  
                  The last path is used as the value for the category facet.
                  The entire structure is used for Klevu Smart Category Navigation.
