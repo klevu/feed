@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!--
-Magento customers migrating from the Klevu extension
-must provide their data in a specific format to ensure backward compatibility.
+Magento customers migrating from the Klevu extension must provide certains elements
+in a specific format to ensure backward compatibility, these are highlighted below.
+Any elements not mentioned below, please reference the main schema.xsd / sample.xml.
 
 IMPORTANT: Please inform Klevu Support that you are migrating from Magento extension,
 so they can ensure the data is validated and will continue to work as expected,
