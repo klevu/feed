@@ -1,12 +1,6 @@
-# Klevu Feed Format (FeedV2)
+# Klevu Feed Format (Feed V2)
 
-**October 2020:** This is our new Klevu XML Feed Format, also known as *FeedV2*.
-It is currently in **beta** as we carefully monitor all new submissions,
-but has been tested thoroughly and is ready for public use.
-
-# FAQ and Documentation
-
-Please visit support.klevu.com for full documentation and answers to the most common questions:  
+Please visit our support website for full documentation and answers to the most common questions:  
 [https://support.klevu.com/knowledgebase/feed-format](https://support.klevu.com/knowledgebase/feed-format)
 
 # Integration Steps
@@ -57,11 +51,8 @@ fields such as &lt;id/&gt;, so please cross-reference them with the XSD Schema.
 
 # Not yet supported
 
-As mentioned at the top of this document, the Klevu Feed is in beta phase, and while we are making
-our best efforts to ensure all of the information provided is accurate, there may be some discrepancies.
-
-> :warning: **The following features are not yet supported**, but are included in the XSD Schema and
-Sample XML file as they may be coming soon as part of the beta period.
+> :warning: **The following features are not yet supported**,
+but are included in the XSD Schema and Sample XML file as they will be coming soon.
 
 - **Magento group/tier prices are not currently supported**,
 for example Wholesale or Retail pricing, where our Magento extension exports group prices in a

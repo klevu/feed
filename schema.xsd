@@ -414,10 +414,8 @@
                             The rating of the item.
                             A decimal number between 0 and 5.
                             
-                            API Response Format: swatches
-                            - swatches: 
-                            - - swatch: 
-                            - - - color: Red
+                            API Response Format: rating
+                            - rating: 4.5
                         ]]></xs:documentation>
                     </xs:annotation>
                     <xs:restriction base="xs:decimal">
