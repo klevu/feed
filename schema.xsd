@@ -115,7 +115,8 @@
                         See `ItemIdType` for detailed information about formatting.
                         
                         API Response Format: id, itemId, itemGroupId
-                        - id: "p54321-v54321"
+                        - id: "p54321-v54321" (deprecated)
+                        - id: "v54321"
                         - itemId: "v54321"
                         - itemGroupId: "p54321"
                     ]]></xs:documentation>
@@ -133,13 +134,10 @@
                         For compound items, populate <item_group_id/> with the ID of the
                         parent item which ties all of the variant or child items together,
                         and populate <id/> with the ID of the variant or child item.
-        
-                        Klevu will combine <item_group_id/> with <id /> to make an identifier
-                        for the item, for example Product p54321 and Variant v12345
-                        would have a combined ID of p54321-v12345.
                         
                         API Response Format: id, itemId, itemGroupId
-                        - id: "p54321-v54321"
+                        - id: "p54321-v54321" (deprecated)
+                        - id: "v54321"
                         - itemId: "v54321"
                         - itemGroupId: "p54321"
                     ]]></xs:documentation>
