@@ -90,7 +90,10 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
             
                  The below example represents a compound product.
                  It has a Variant ID of v12345 and a Parent ID of p54321.
-                 Klevu will combine this to a final ID of p54321-v12345.
+                 
+                 Prefixing Parent ID to Variant ID i.e. p54321-v12345 is 
+                 deprecated starting from 10-Jan-2022 for any new stores.
+                 However, if your use case requires prefixing, please contact support@klevu.com
                  
                  For non-compound items you should omit <item_group_id/>
                  and populate <id/> with the ID of the item, eg. p54321.
