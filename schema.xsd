@@ -423,6 +423,22 @@
                 </xs:simpleType>
             </xs:element>
             
+            <xs:element name="rating_count" minOccurs="0" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            The count of total number of ratings of the item.
+                            An integer number.
+
+                            API Response Format: ratingCount
+                            - ratingCount: 10
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:integer">
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            
             <xs:element name="boosting_score" minOccurs="0" maxOccurs="1">
                 <xs:simpleType>
                     <xs:annotation>
