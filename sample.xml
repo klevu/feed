@@ -234,6 +234,11 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                  The rating of your item, a decimal between 0 and 5.
                  This is used by Klevu to power the "Sort by Rating" sort order. -->
             <rating>4.5</rating>
+            
+            <!-- OPTIONAL
+                 The count of total number of ratings of the item, an integer number.
+                 This is used by Klevu for self learning computations, only when flag is enabled in Klevu Merchant Center  -->
+            <rating_count>10</rating_count>
 
             <!-- OPTIONAL and not recommended.
                  Use this to override the Klevu manual boosting rules.
