@@ -9,6 +9,7 @@
             <title>My Blog Article or CMS Page</title>
             <link>https://your.website/blog-or-cms-page.html</link>
             <published_at>1999-12-31</published_at>
+            <!-- Allowed date formats: https://github.com/klevu/feed/blob/master/schema.xsd#L1092-L1107 -->
             <image_link>https://your.website/page.jpg</image_link>
             <description>The content of the Blog Article or CMS page.</description>
             <attributes>
