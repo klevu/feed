@@ -688,10 +688,12 @@
                             provided will be returned with your item, thus increasing the data
                             size for search results. This can slow down your search experience.
                         
-                            Similar to the use of <is_return/> within `ComplexAttributeType`
-                            this element is provided for you to add free format data which
+                            This element is provided for you to add free format data which
                             will be returned in search results with your item. This can be
                             used for frontend logic or rendering.
+
+                            IMPORTANT: Please reach out to support if you are submitting / planning 
+                            to submit the following field. This field is DISABLED by default.
                             
                             The format of this data is up to you, as it will be returned
                             as-is, however any HTML should be escaped into HTML entities
@@ -1141,7 +1143,6 @@
                 - name: the element name, lowercase with an uppercase first letter (eg. Color)
                 - values: the single value provided (eg. Red)
                 - is_searchable: true
-                - is_return: false
                 
                 The following will vary depending on each individual element definition:
                 - is_facet: true or false depending on the attribute
@@ -1156,7 +1157,6 @@
                         </values>
                         <is_facet>true</is_facet>
                         <is_searchable>true</is_searchable>
-                        <is_return>false</is_return>
                     </attribute>
                 </attributes>
             ]]></xs:documentation>
@@ -1228,28 +1228,11 @@
                         The default value is: true.
                         
                         Note that if <is_facet/> is true, this will automatically be true,
-                        even if you specify it as false. The main use-case for this flag
-                        is when used in conjunction with <is_return/> for the scenario
-                        where you want an attribute to be returned, but NOT searchable.
+                        even if you specify it as false. 
                     ]]></xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
-            <xs:element name="is_return" type="xs:boolean" minOccurs="0" maxOccurs="1">
-                <xs:annotation>
-                    <xs:documentation>
-                        Whether the values provided should be returned with search results.
-                        Set this to true if you want to render the values on your frontend.
                         
-                        Note: at the time of writing some manual work is required at Klevu
-                        to enable each attribute for return, so this flag is used to help
-                        our team identify which attributes you would like us to enable.
-                        
-                        The default value is: false.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            
             <xs:element name="values" minOccurs="1" maxOccurs="1">
                 <xs:complexType>
                     <xs:sequence>
