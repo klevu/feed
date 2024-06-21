@@ -210,10 +210,7 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                  For example if you want to first show the general
                  image and when the customer hovers show the specific
                  Variant image, populate <image_link/> with the Parent
-                 image and <additional_image_link/> with the Variant image.
-                  
-                 If you require more images to display in search results,
-                 please add an <attribute/> below with <is_return/> true. -->
+                 image and <additional_image_link/> with the Variant image. -->
             <image_link>https://your.website/image1.jpg</image_link>
             <additional_image_link>https://your.website/image2.png</additional_image_link>
             
@@ -337,14 +334,7 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                  it will automatically be searchable. A facet attribute will always be searchable.
                  
                  If you want an attribute to be searchable but not a facet, specify
-                 <is_facet/> false. <is_searchable/> is true by default so no need to specify.
-                  
-                 If you want an attribute to be returned in the search response data,
-                 but neither searchable nor a facet, then you can specify <is_facet/> and
-                 <is_searchable/> as false and <is_return/> as true.
-                 
-                 Note that for any attributes with <is_return/> true, please contact
-                 Klevu Support who will enable these attributes to be included in the response. -->
+                 <is_facet/> false. <is_searchable/> is true by default so no need to specify. -->
             <attributes>
                 
                 <!-- Here we have overridden <color/> above to provide two values, Green and Blue.
@@ -390,25 +380,16 @@ For Klevu, <id>123456</id> is identical to <g:id>123456</g:id>.
                         <value><![CDATA[Christmas, Parties & Birthdays]]></value>
                     </values>
                 </attribute>
-                
-                <!-- Here we have a flag that will be used on the frontend somehow,
-                     which we do not want to be searchable or to be used as a facet. -->
-                <attribute>
-                    <id>some-frontend-flag</id>
-                    <is_facet>false</is_facet>
-                    <is_searchable>false</is_searchable>
-                    <is_return>true</is_return>
-                    <values>
-                        <value>foo_bar_1</value>
-                        <value>foo_bar_2</value>
-                    </values>
-                </attribute>
             </attributes>
             
             <!-- OPTIONAL
-                 Similar to <is_return/> above, you can specify some arbitrary data in this
+                 You can specify some arbitrary data in this
                  field which will be returned in your search results. We recommend JSON format
-                 but Klevu will return this data as-is, so the structure is up to you. -->
+                 but Klevu will return this data as-is, so the structure is up to you. 
+            
+                 IMPORTANT: Please reach out to support if you are submitting / planning to submit 
+                 the following field. This field is DISABLED by default. 
+            -->
             <additional_data_to_return><![CDATA[{"some_arbitrary": "data to return"}]]></additional_data_to_return>
 
             <!-- REQUIRED for KLEVU_PRODUCT, OPTIONAL for others.
